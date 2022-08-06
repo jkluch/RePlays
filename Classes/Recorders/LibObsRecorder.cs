@@ -20,6 +20,7 @@ namespace RePlays.Recorders {
 
         Dictionary<string, IntPtr> audioSources = new(), videoSources = new();
         Dictionary<string, IntPtr> audioEncoders = new(), videoEncoders = new();
+        IntPtr videoScene, sceneItemVideo;
 
         static bool signalOutputStop = false;
         static bool signalGCHookSuccess = false;
@@ -177,6 +178,12 @@ namespace RePlays.Recorders {
             obs_data_release(videoEncoderSettings);
             obs_encoder_set_video(videoEncoder, obs_get_video());
             obs_output_set_video_encoder(output, videoEncoder);
+
+            // SETUP SCENE FOR SCALING
+            videoScene = obs_scene_create("base-scene");
+            sceneItemVideo = obs_scene_add(videoScene, videoSources["gameplay"]);
+            obs_sceneitem_set_bounds_alignment(sceneItemVideo, (UInt32)obs_alignment_type.OBS_ALIGN_CENTER);
+            obs_sceneitem_set_bounds_type(sceneItemVideo, obs_bounds_type.OBS_BOUNDS_MAX_ONLY);
 
             // attempt to wait for game_capture source to hook first
             // this might take longer, so multiply maxRetryAttempts
@@ -361,6 +368,12 @@ namespace RePlays.Recorders {
         }
 
         public void ReleaseSources() {
+            obs_sceneitem_remove(sceneItemVideo);
+            obs_sceneitem_release(sceneItemVideo);
+            obs_scene_release(videoScene); // I don't see a method for obs_scene_remove
+            sceneItemVideo = IntPtr.Zero;
+            videoScene = IntPtr.Zero;
+
             foreach (var videoSource in videoSources.Values) {
                 obs_source_remove(videoSource);
                 obs_source_release(videoSource);

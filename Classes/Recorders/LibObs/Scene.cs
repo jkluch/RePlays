@@ -13,5 +13,20 @@ namespace obs_net {
 
         [DllImport(importLibrary, CallingConvention = importCall)]
         public static extern obs_sceneitem_t obs_scene_add(obs_scene_t scene, obs_source_t source);
+
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_scene_release(obs_scene_t scene);
+
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_sceneitem_remove(obs_sceneitem_t item);
+
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_sceneitem_release(obs_sceneitem_t item);
+
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_sceneitem_set_bounds_type(obs_sceneitem_t item, obs_bounds_type type);
+
+        [DllImport(importLibrary, CallingConvention = importCall)]
+        public static extern void obs_sceneitem_set_bounds_alignment(obs_sceneitem_t item, UInt32 alignment);
     }
 }

@@ -134,6 +134,26 @@ namespace obs_net {
 			OBS_SCALE_LANCZOS,
 		};
 
+		public enum obs_bounds_type : int {
+			OBS_BOUNDS_NONE,            /**< no bounds */
+			OBS_BOUNDS_STRETCH,         /**< stretch (ignores base scale) */
+			OBS_BOUNDS_SCALE_INNER,     /**< scales to inner rectangle */
+			OBS_BOUNDS_SCALE_OUTER,     /**< scales to outer rectangle */
+			OBS_BOUNDS_SCALE_TO_WIDTH,  /**< scales to the width  */
+			OBS_BOUNDS_SCALE_TO_HEIGHT, /**< scales to the height */
+			OBS_BOUNDS_MAX_ONLY,        /**< no scaling, maximum size only */
+		};
+
+		// enum supports bitwise operations hence [Flags]
+		[Flags]
+		public enum obs_alignment_type : UInt32 {
+			OBS_ALIGN_CENTER = 0,
+			OBS_ALIGN_LEFT = 1,
+			OBS_ALIGN_RIGHT = 2,
+			OBS_ALIGN_TOP = 4,
+			OBS_ALIGN_BOTTOM = 8,
+		};
+
 		[StructLayout(LayoutKind.Sequential)]
 		public struct obs_audio_info {
 			public uint samples_per_sec;
