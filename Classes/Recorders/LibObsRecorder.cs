@@ -182,8 +182,23 @@ namespace RePlays.Recorders {
             // SETUP SCENE FOR SCALING
             videoScene = obs_scene_create("base-scene");
             sceneItemVideo = obs_scene_add(videoScene, videoSources["gameplay"]);
-            obs_sceneitem_set_bounds_alignment(sceneItemVideo, (UInt32)obs_alignment_type.OBS_ALIGN_CENTER);
-            obs_sceneitem_set_bounds_type(sceneItemVideo, obs_bounds_type.OBS_BOUNDS_MAX_ONLY);
+            obs_transform_info itemInfo = new() {
+                pos = new vec2(),
+                scale = new vec2(),
+                bounds = new vec2(),
+            };
+            vec2_set(ref itemInfo.pos, 0.0f, 0.0f);
+            vec2_set(ref itemInfo.scale, 1.0f, 1.0f);
+            itemInfo.alignment = (UInt32)(obs_alignment_type.OBS_ALIGN_LEFT | obs_alignment_type.OBS_ALIGN_TOP);
+            itemInfo.rot = 0.0f;
+            obs_video_info ovi = new obs_video_info();
+            obs_get_video_info(ref ovi);
+            vec2_set(ref itemInfo.bounds, (float)ovi.base_width, (float)ovi.base_height);
+            itemInfo.bounds_type = obs_bounds_type.OBS_BOUNDS_SCALE_INNER;
+            itemInfo.bounds_alignment = (UInt32)obs_alignment_type.OBS_ALIGN_CENTER;
+            // obs_sceneitem_set_bounds_alignment(sceneItemVideo, (UInt32)obs_alignment_type.OBS_ALIGN_CENTER);
+            // obs_sceneitem_set_bounds_type(sceneItemVideo, obs_bounds_type.OBS_BOUNDS_MAX_ONLY);
+            obs_sceneitem_set_info(ref sceneItemVideo, ref itemInfo);
 
             // attempt to wait for game_capture source to hook first
             // this might take longer, so multiply maxRetryAttempts

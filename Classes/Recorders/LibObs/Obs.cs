@@ -67,6 +67,9 @@ namespace obs_net {
 		[DllImport(importLibrary, CallingConvention = importCall)]
 		public static extern int obs_reset_video(ref obs_video_info ovi);
 
+		[DllImport(importLibrary, CallingConvention = importCall)]
+		public static extern void obs_get_video_info(ref obs_video_info ovi);
+
 		/// <summary>
 		/// <para>https://obsproject.com/docs/reference-core.html#c.obs_reset_audio</para>
 		/// <para>Sets base audio output format/channels/samples/etc.</para>
@@ -124,6 +127,23 @@ namespace obs_net {
 			public video_range_type range;       //YUV range (if YUV)
 
 			public obs_scale_type scale_type;    //How to scale if scaling
+		};
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct vec2 {
+			public float x, y;
+		};
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct obs_transform_info {
+			public vec2 pos;
+			public float rot;
+			public vec2 scale;
+			public UInt32 alignment;
+
+			public obs_bounds_type bounds_type;
+			public UInt32 bounds_alignment;
+			public vec2 bounds;
 		};
 
 		public enum obs_scale_type : int {
