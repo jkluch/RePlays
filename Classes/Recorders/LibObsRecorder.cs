@@ -48,7 +48,7 @@ namespace RePlays.Recorders {
                             if(signalGCHookSuccess != false) {
                                 // everytime the "Starting capture" signal occurs, there could be a possibility that the game window has resized
                                 // if it has resized, restart output with correct size
-                                RestartOutput();
+                                // RestartOutput();
                             }
                             signalGCHookSuccess = true;
                         }
@@ -335,17 +335,19 @@ namespace RePlays.Recorders {
 
         public static void ResetVideo(int outputWidth = 1, int outputHeight = 1) {
             //Screen ratio to calculate output width.
-            double screenRatio = (double)outputWidth / (double)outputHeight;
+            double screenRatio = 16d / 9d;
+            uint height = (uint)SettingsService.Settings.captureSettings.resolution;
+            uint width = (uint)Convert.ToInt32(SettingsService.Settings.captureSettings.resolution * screenRatio);
 
             obs_video_info ovi = new() {
                 adapter = 0,
                 graphics_module = "libobs-d3d11",
                 fps_num = (uint)SettingsService.Settings.captureSettings.frameRate,
                 fps_den = 1,
-                base_width = (uint)(outputWidth > 1 ? outputWidth : System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width),
-                base_height = (uint)(outputHeight > 1 ? outputHeight : System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height),
-                output_width = (uint)(outputWidth > 1 ? Convert.ToInt32(SettingsService.Settings.captureSettings.resolution * screenRatio) : System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width),
-                output_height = (uint)(outputHeight > 1 ? SettingsService.Settings.captureSettings.resolution : System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height),
+                base_width = width,
+                base_height = height,
+                output_width = width,
+                output_height = height,
                 output_format = video_format.VIDEO_FORMAT_NV12,
                 gpu_conversion = true,
                 colorspace = video_colorspace.VIDEO_CS_DEFAULT,
